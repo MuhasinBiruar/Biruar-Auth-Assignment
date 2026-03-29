@@ -36,6 +36,7 @@ let state = {
     totalPrice: 0
 }
 
+//state
 const setState = (newState) => {
     state = { ...state, ...newState };
 }
@@ -49,19 +50,24 @@ const handleAddToCart = (addBtn) => {
 
     // Check if item already exists in cart
     const existingItem = state.cart.find(item => item.id === id);
+    let updatedCart = [...state.cart];
 
     if (existingItem) {
         // Update quantity if item exists
-        existingItem.quantity += 1;
+        updatedCart = updatedCart.map(item => 
+            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        );
     } else {
         // Add new item if it doesn't exist
         const product = { id, title, price, quantity: 1 };
-        state.cart.push(product);
+        updatedCart.push(product);
     }
 
-    state.total += 1;
-    state.totalPrice += Number(price.replace("$", ""));
-    setState({ cart: [...state.cart], total: state.total, totalPrice: state.totalPrice });
+    setState({ 
+        cart: updatedCart, 
+        total: state.total + 1, 
+        totalPrice: state.totalPrice + Number(price.replace("$", ""))
+    });
 };
 
 const updateCartDisplay = () => {
@@ -98,11 +104,16 @@ const handleAddQuantity = () => {
     if (!selectedItemId) return;
     const item = state.cart.find(i => i.id === selectedItemId);
     if (item) {
-        item.quantity += 1;
-        state.total += 1;
-        state.totalPrice += Number(item.price.replace("$", ""));
-        setState({ cart: [...state.cart], total: state.total, totalPrice: state.totalPrice });
-        modalItemTitle.textContent = `${item.title} (Qty: ${item.quantity})`;
+        const updatedCart = state.cart.map(i =>
+            i.id === selectedItemId 
+                ? { ...i, quantity: i.quantity + 1 }: i
+        );
+        setState({ 
+            cart: updatedCart, 
+            total: state.total + 1, 
+            totalPrice: state.totalPrice + Number(item.price.replace("$", ""))
+        });
+        modalItemTitle.textContent = `${item.title} (Qty: ${item.quantity + 1})`;
         updateCartDisplay();
     }
 };
@@ -111,18 +122,29 @@ const handleRemoveQuantity = () => {
     if (!selectedItemId) return;
     const item = state.cart.find(i => i.id === selectedItemId); //find id in cart where i.id = selectedItemId to check if it exists in the cart
     if (item) {
-        item.quantity -= 1;
-        state.total -= 1;
-        state.totalPrice -= Number(item.price.replace("$", ""));
-
-        if (item.quantity === 0) {
-            state.cart = state.cart.filter(i => i.id !== selectedItemId); //automatically remove 0 qty items
-            setState({ cart: [...state.cart], total: state.total, totalPrice: state.totalPrice });
+        const newQuantity = item.quantity - 1;
+        
+        if (newQuantity === 0) {
+            const updatedCart = state.cart.filter(i => i.id !== selectedItemId); //automatically remove 0 qty items
+            setState({ 
+                cart: updatedCart, 
+                total: state.total - 1, 
+                totalPrice: state.totalPrice - Number(item.price.replace("$", ""))
+            });
             updateCartDisplay();
             closeItemModal();
         } else {
-            modalItemTitle.textContent = `${item.title} (Qty: ${item.quantity})`;
-            setState({ cart: [...state.cart], total: state.total, totalPrice: state.totalPrice });
+            const updatedCart = state.cart.map(i =>
+                i.id === selectedItemId 
+                    ? { ...i, quantity: newQuantity }
+                    : i
+            );
+            setState({ 
+                cart: updatedCart, 
+                total: state.total - 1, 
+                totalPrice: state.totalPrice - Number(item.price.replace("$", ""))
+            });
+            modalItemTitle.textContent = `${item.title} (Qty: ${newQuantity})`;
             updateCartDisplay();
         }
     }
@@ -132,12 +154,14 @@ const handleRemoveItem = () => {
     if (!selectedItemId) return;
     const item = state.cart.find(i => i.id === selectedItemId);
     if (item) {
-        state.total -= item.quantity;
-        state.totalPrice -= Number(item.price.replace("$", "")) * item.quantity;
-        state.cart = state.cart.filter(i => i.id !== selectedItemId);
-        setState({ cart: [...state.cart], total: state.total, totalPrice: state.totalPrice });
+        const updatedCart = state.cart.filter(i => i.id !== selectedItemId);
+        setState({ 
+            cart: updatedCart, 
+            total: state.total - item.quantity, 
+            totalPrice: state.totalPrice - Number(item.price.replace("$", "")) * item.quantity
+        });
         updateCartDisplay();
-        //closeItemModal();
+        closeItemModal();
     }
 };
 
