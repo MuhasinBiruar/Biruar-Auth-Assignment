@@ -27,8 +27,8 @@ const priceRangeForm = document.querySelector("#priceFilterForm");
 //when apply is hit, fetch products within the price range and display them
 priceRangeForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    let minPrice = Number(document.getElementById("minPriceRange").value);
-    let maxPrice = Number(document.getElementById("maxPriceRange").value);
+    let minPrice = Number(priceRangeForm.minPriceRange.value);
+    let maxPrice = Number(priceRangeForm.maxPriceRange.value);
 
     if (minPrice === null && maxPrice === null) {
         showLoading(true);
