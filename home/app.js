@@ -38,9 +38,6 @@ priceRangeForm.addEventListener("submit", async (e) => {
         }, 2000);
         return;
     }
-    else if ((minPrice === null || isNaN(Number(minPrice)) || minPrice === "") && maxPrice > 0) {
-        minPrice = 1;
-    }
     else if (minPrice > maxPrice) {
         alert("Minimum price cannot be greater than maximum price.");
         return;
