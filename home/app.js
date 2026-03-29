@@ -38,7 +38,8 @@ priceRangeForm.addEventListener("submit", async (e) => {
         }, 2000);
         return;
     }
-    else if (minPrice > maxPrice) {
+    
+    if (minPrice > maxPrice) {
         alert("Minimum price cannot be greater than maximum price.");
         return;
     }
