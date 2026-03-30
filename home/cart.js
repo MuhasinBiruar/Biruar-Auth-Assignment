@@ -213,7 +213,8 @@ checkoutBtn.addEventListener("click", () => {
         userInfo: userEmail,
         cart: getState().cart,
         total: getState().total,
-        totalPrice: getState().totalPrice
+        totalPrice: getState().totalPrice,
+        date: new Date().toISOString().slice(0, 10) //to remove timezone info
     }
     showLoading(true);
     try {
