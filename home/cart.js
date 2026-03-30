@@ -209,17 +209,26 @@ checkoutBtn.addEventListener("click", () => {
         return;
     }
     const userEmail = getCurrentUser().email;
+    const user = getCurrentUser();
+    let existingData = JSON.parse(localStorage.getItem('customerData')) || [];
     const customerData = {
-        userInfo: userEmail,
+        user: user,
         cart: getState().cart,
         total: getState().total,
         totalPrice: getState().totalPrice,
         date: new Date().toISOString().slice(0, 10) //to remove timezone info
     }
+    let saveData = [];
+    if(existingData !== null || existingData.length > 0 || existingData !== undefined){
+        saveData = existingData.concat(customerData); //append customerData to existingData if it exists
+    }
+    else{
+        saveData = customerData;
+    }
     showLoading(true);
     try {
         setTimeout(() => {
-            localStorage.setItem("customerData", JSON.stringify(customerData));
+            localStorage.setItem("customerData", JSON.stringify(saveData));
             showLoading(false);
             alert("Checkout successful! Your order has been placed.");
             //clear cart
