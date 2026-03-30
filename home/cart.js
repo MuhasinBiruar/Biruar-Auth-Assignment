@@ -208,7 +208,7 @@ checkoutBtn.addEventListener("click", () => {
         alert("Your cart is empty!");
         return;
     }
-    const userEmail = getCurrentUser().email;
+    //const userEmail = getCurrentUser().email;
     const user = getCurrentUser();
     let existingData = JSON.parse(localStorage.getItem('customerData')) || [];
     const customerData = {
