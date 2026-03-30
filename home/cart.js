@@ -214,8 +214,8 @@ checkoutBtn.addEventListener("click", () => {
     const customerData = {
         user: user,
         cart: getState().cart,
-        total: getState().total,
-        totalPrice: getState().totalPrice,
+        total: getState().totalPrice,
+        //totalPrice: getState().totalPrice,
         date: new Date().toISOString().slice(0, 10) //to remove timezone info
     }
     let saveData = [];
